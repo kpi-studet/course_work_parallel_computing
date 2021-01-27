@@ -1,4 +1,4 @@
-package com.kpi.parallelcomputing.kpi;
+package com.kpi.parallelcomputing;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

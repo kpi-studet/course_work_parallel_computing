@@ -1,4 +1,4 @@
-package com.kpi.parallelcomputing.kpi;
+package com.kpi.parallelcomputing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
