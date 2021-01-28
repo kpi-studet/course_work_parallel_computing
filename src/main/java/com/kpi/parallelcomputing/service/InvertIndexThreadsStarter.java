@@ -9,17 +9,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class InvertIndexThreadsStarter {
-   // private  ConcurrentHashMap<String, List<Integer>> invIndex; //готовый индекс
+    private  ConcurrentHashMap<String, List<Integer>> invIndex;
+    private List<Path> filesList;
+    private AtomicInteger docIdAtomic;
+    IndexThread[] threads;
 
     public long startThreads(int numberOfThreads) {
-        ArrayList<Path> files = createFilesList();
-        IndexThread[] threads = new IndexThread[numberOfThreads];
-        IndexThread.initIndex(numberOfThreads);
-        // invIndex = new ConcurrentHashMap<>(50,50, numberOfThreads);
+        docIdAtomic = new AtomicInteger(0);
+        filesList = createFilesList();
+        threads = new IndexThread[numberOfThreads];
+        invIndex = new ConcurrentHashMap<>(50,50, numberOfThreads);
 
 
         // start threads
@@ -27,7 +31,7 @@ public class InvertIndexThreadsStarter {
 
         try {
             for (int i = 0; i < numberOfThreads; i++) {//запускаем потоки формирования индекса помещая их в массив threads
-                threads[i] = new IndexThread(files);
+                threads[i] = new IndexThread(filesList, docIdAtomic, invIndex);
             }
             for (int i = 0; i < numberOfThreads; i++) {
                 threads[i].join();
@@ -54,4 +58,11 @@ public class InvertIndexThreadsStarter {
         return files;
     }
 
+    public ConcurrentHashMap<String, List<Integer>> getInvIndex() {
+        return invIndex;
+    }
+
+    public List<Path> getFilesList() {
+        return filesList;
+    }
 }
